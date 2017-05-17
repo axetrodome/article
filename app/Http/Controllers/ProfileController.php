@@ -24,4 +24,8 @@ class ProfileController extends Controller
     	}
     	return view('user.profile', array('user' => Auth::user()) );
     }
+     public function myArticles(){
+        $articles = Article::where('user_id', Auth::user()->id )->paginate(10);
+        return View('articles.index', compact('articles'));
+    }
 }
