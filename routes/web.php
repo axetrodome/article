@@ -18,7 +18,14 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 // Route::get('/profile/{username}','ProfileController@profile');//route parameters{/profile/{username}}
+Route::get('myArticles','ProfileController@myArticles');
 Route::get('prof','ProfileController@profile')->middleware('authenticated');
-Route::post('prof','ProfileController@update_avatar')->middleware('authenticated');
-Route::resource('profile','UsersController');
-Route::resource('articles','ArticlesController');
+Route::group(['middleware' => 'authenticated'],function(){
+	Route::resource('profile','UsersController');
+	Route::resource('articles','ArticlesController');
+	Route::resource('settings','UserSettingsController');
+	Route::resource('comments','UserCommentController');
+	Route::resource('reply','UserReplyController');
+});
+// colin de carlo eloquent
+// Route::post('com','ListController@createComment');uu

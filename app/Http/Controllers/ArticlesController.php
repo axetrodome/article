@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Article;
 use Auth;
-use DB;
+use App\User;
+use Session;
+use App\Comment;
+use Illuminate\Support\Facades\Redirect;
 class ArticlesController extends Controller
 {
     /**
@@ -21,8 +24,10 @@ class ArticlesController extends Controller
         //Eloquent
         // $articles = Article::whereLive(1)->first();
         // dd($articles);
-        $articles = Article::paginate(10);
-        return View('articles.index', compact('articles'));
+        // articles = Article::where('user_id', Auth::user()->id )->paginate(10);
+        $articles = Article::orderBy('id','DESC')->paginate(5);
+        // $articles = Article::paginate(10);
+        return View('articles.index',compact('articles'));
     }
 
     /**
@@ -108,7 +113,7 @@ class ArticlesController extends Controller
             'post_on' => 'required',
             ]);
         $article = Article::findOrFail($id);
-        if(! isset($request->live))
+        if(!isset($request->live))
             $article->update(array_merge($request->all(), ['live' => false ] ));
         else
             $article->update($request->all());
@@ -128,8 +133,8 @@ class ArticlesController extends Controller
         $article = Article::findOrFail($id);
         $article->forceDelete();
         // $article->delete();
-        return redirect('/articles');
-
-
+        // \Session::flash('success','Articles has been deleted');
+        return Redirect::back()->with('success','Articles has been deleted');
     }
+
 }

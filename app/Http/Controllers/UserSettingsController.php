@@ -1,13 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\User;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
+use App\User;
 use Session;
-use Auth;
-use Image;
-class UsersController extends Controller
+use Illuminate\Support\Facades\Redirect;
+class UserSettingsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,6 @@ class UsersController extends Controller
      */
     public function index()
     {
-        
         //
     }
 
@@ -39,7 +37,6 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         //
-
     }
 
     /**
@@ -63,8 +60,9 @@ class UsersController extends Controller
     {
         //
         $user = User::findOrFail($id);
-        return View('user.edit',compact('user'));
+        return view('user.settings',compact('user'));
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -74,30 +72,20 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-         $this->validate($request , 
-            [
-            'name' =>'required|min:1' ,
-            'email' =>'required' ,
-            'dob' =>'required' ,
-            'avatar' => 'mimes:jpeg,bmp,png',   
-            ],[
-            'name.required' => 'The name must contain atleast 1 character',
-            'avatar.mimes' => 'The File must be an Image']);
-        if($request->hasFile('avatar'))
-        {
-             $avatar = $request->file('avatar');
-             $filename = time() . '.' . $avatar->getClientOriginalExtension();
-             Image::make($avatar)->resize(300, 300)->save( public_path('/uploads/avatars/' . $filename ) );
-             $user = Auth::user();
-             $user->avatar = $filename;
-             $user->save();
-        }
-
+        //
+        $this->validate($request,[
+            'username' => 'required|min:1',
+            'password' => 'required|min:6',
+            'password_confirmation' => 'required|min:6|same:password'
+            ],
+            ['password_confirmation.same' => "Password didn't match",
+            ]);
         $user = User::findOrFail($id);
         $user->update($request->all());
-        \Session::flash('success','Your profile has been success fuly Updated!');
+        \Session::flash('success','Profile Settings successfuly Edited');
+        return redirect()->route('settings.edit', $id);
 
-        return Redirect()->route('profile.edit',$id);
+
     }
 
     /**
@@ -110,14 +98,4 @@ class UsersController extends Controller
     {
         //
     }
-    // public function update_avatar(Request $request){
-    //  // Handle the user upload of avatar
-
-    //  return view('user.profile', array('user' => Auth::user()) );
-    // }
-        public function myArticles(){
-        $articles = Article::where('user_id', Auth::user()->id )->orderBy('id','DESC')->paginate(10);
-        return View('articles.index', compact('articles'));
-    }
-    
 }

@@ -20,4 +20,4 @@
 	</div>
 @endsection
 <!-- ({{ Carbon\Carbon::createFromFormat('Y-m-d',$user->dob)->age }} Years old ) -->
-<!-- https://www.youtube.com/watch?v=N_i3UFw0_84 -->
+<!-- https://github.com/axetrodome/article -->
