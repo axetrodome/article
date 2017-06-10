@@ -127,12 +127,12 @@
   crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        $(document).ready(function(){
-            $.ajaxSetup({
-              headers: {
-                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                  }
-             });
+        $(document).ready(function() {
+                $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                      }
+                 });
             function readURL(input){
                 if(input.files && input.files[0]){
                     var reader = new FileReader();
@@ -145,38 +145,50 @@
             $('#inputImage').change(function(){
                 readURL(this);
             });
-            // $(document).on('click','#submit',function(event){
-            //     var body = $('#body').val();
-            //     var commentable_id = $('#commentable_id').val();
-            //     var user_id = $('#user_id').val();
-            //     $.post('comments',{'body':body,'commentable_id':commentable_id,'user_id':user_id,'_token':$('input[name=_token]').val()},function(data){
-            //          location.reload();
-            //     });
-            // });
-            $(document).on('click','#commentForm',function(){
-                var id = $(this).find('#commentable_id').val();
-                $('#id').val(id);
-            });
-            $(document).on('click','#submit',function(e){
-            e.preventDefault(); // Prevent Default Submission
-            var body = $('#body').val();
-            var commentable_id = $('#id').val();
-            var user_id = $('#user_id').val();
-                // var data = $(this).serialize();
-                // var post = $(this).attr('method');
-            $.ajax({
-                 url:'/comments',
-                 type: 'POST',
-                 data:{'commentable_id':commentable_id,'user_id':user_id,'body':body},
-                 success:function(data){
-                    $('#comments').load(location.href + ' #comments'); 
-                    console.log(data);
-                    $('input[type="text"],textarea').val('');
-                        } 
-                    });
-                 });
-            });
+            $('.delete-forms').each(function(index,delete_form){
 
+                $(delete_form).on('submit',function(event){
+                    event.preventDefault();
+                    var form_fields = $(delete_form).children();
+                    var id = form_fields[3].value;
+                    $.post('delete',{'id':id,'_token':$('input[name=_token]').val() },function(data){
+                        location.reload();
+                        // console.log($($($(delete_form).parent()[0]).children()[2]));
+                        });
+                });
+            });
+            $('.comment-forms').each(function(index, comment_form) {
+                // header for csrf token
+
+                // when this form is submitted
+                $(comment_form).on('submit', function(submitEvent) {
+                    // don't load the page
+                    submitEvent.preventDefault();
+                    // the form fields
+                    var form_fields = $($(comment_form).children()[1]).children();//input[0], form-group[1]
+                    // the comment container of this form
+                    var comment_container = $($($(comment_form).parent()[0]).children()[2]); //parent[0] = div.comment-container
+                    // article id where the comment would be inserted
+                    var commentable_id = form_fields[0].value;
+                    // the user id of commenter
+                    var user_id = form_fields[1].value;
+                    // comment body
+                    var body = form_fields[2].value;
+
+                    $.post('comments', {
+                        'commentable_id': commentable_id,
+                        'user_id': user_id,
+                        'body': body
+                    }).then(function(data) {
+                            $('input[type="text"],textarea').val('');
+                            location.reload();
+                            // console.log($($($(comment_form).parent()[0]).children()[2]));
+
+                    });
+                });
+            });
+        });  
     </script>
+x
 
 </html>

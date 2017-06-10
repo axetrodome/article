@@ -47,9 +47,10 @@
 						<p class="body">{{ $comment->body }}</p>
 					@endforeach					
 				</div>
-				<form action="/comments" method="POST" class="clearfix">
+				<form action="/comments" method="POST" class="clearfix comment-forms">
 					{{ csrf_field() }}
 					<div class="form-group">
+						<input type="hidden" id="id">
 						<input type="hidden" name="commentable_id" value="{{ $article->id }}" id="commentable_id">
 						<input type="hidden" name="user_id" value="{{ Auth::user()->id  }}" id="user_id">
 						<textarea class="form-control" placeholder="Comment.." style="height:50px" name="body" id="body"></textarea>

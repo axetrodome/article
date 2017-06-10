@@ -27,5 +27,6 @@ Route::group(['middleware' => 'authenticated'],function(){
 	Route::resource('comments','UserCommentController');
 	Route::resource('reply','UserReplyController');
 });
+Route::post('delete','UserCommentController@delete');
 // colin de carlo eloquent
 // Route::post('com','ListController@createComment');uu

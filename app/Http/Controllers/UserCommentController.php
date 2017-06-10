@@ -102,11 +102,15 @@ class UserCommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-        $comment = Comment::findOrFail($id);
-        $comment->forceDelete();
-        return Redirect::back();
+    // public function destroy($id)
+    // {
+    //     //
+    //     $comment = Comment::findOrFail($id);
+    //     $comment->forceDelete();
+    //     return Redirect::back();
+    // }
+    public function delete(Request $request){
+        Comment::where('id',$request->id)->forceDelete();
     }
+
 }

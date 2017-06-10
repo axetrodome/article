@@ -54,10 +54,12 @@
 						  <span class="caret"></span></button>
 						  <ul class="dropdown-menu dropdown-menu-right" style="min-width:90px">
 						    <li>    
-							    <form method="POST" action="/comments/{{ $comment->id }}" style="text-align:center">
+							    <form method="POST" class="delete-forms" style="text-align:center">
+
 									<a class="btn btn-primary btn-sm" href="/comments/{{ $comment->id }}/edit"><i class="fa fa-pencil"></i></a>
 										{{ csrf_field() }}
 										{{ method_field('DELETE') }}
+									<input type="hidden" value="{{ $comment->id }}" id="comment_id">
 									<button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
 								</form>
 							</li>
@@ -112,10 +114,9 @@
 <!--=============================================== 'end of replies'====================================================-->						
 					@endforeach
 				</div>
-			<form method="POST" class="clearfix" id="commentForm">
+			<form class="clearfix comment-forms" id="commentForm">
 				{{ csrf_field() }}
 				<div class="form-group">
-					<input type="hidden" id="id">
 					<input type="hidden" name="commentable_id" value="{{ $article->id }}" id="commentable_id">
 					<input type="hidden" name="user_id" value="{{ Auth::user()->id  }}" id="user_id">
 					<textarea type="text" class="form-control" placeholder="Comment.." style="height:50px" name="body" id="body"></textarea>
@@ -135,4 +136,3 @@
 		</div>
 	</div>
 @endsection
-<!-- http://way2php.com/crud-operations-using-jquery-ajax-laravel-5-3/ -->
